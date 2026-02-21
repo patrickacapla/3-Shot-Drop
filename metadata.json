@@ -1,0 +1,5 @@
+{
+  "name": "3 Shot Drop",
+  "description": "A Plinko-style fortune-reveal game with a high-stakes treasure aesthetic, featuring 3 drops and progressive rewards.",
+  "requestFramePermissions": []
+}
