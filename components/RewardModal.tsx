@@ -1,55 +1,106 @@
 
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 
 interface RewardModalProps {
   title: string;
   message: string;
+  subMessage?: string;
   buttonText: string;
   onAction: () => void;
   isFinal?: boolean;
 }
 
-const RewardModal: React.FC<RewardModalProps> = ({ title, message, buttonText, onAction, isFinal }) => {
-  return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm animate-in fade-in duration-300">
-      <div className="relative w-full max-w-md bg-gradient-to-b from-[#161b3d] to-[#0a0e27] border-2 border-[#D4AF37] rounded-3xl p-8 text-center shadow-[0_0_80px_rgba(212,175,55,0.3)] animate-in zoom-in-95 duration-300">
-        
-        {/* Celebration Decor */}
-        {!isFinal && (
-           <div className="absolute -top-12 left-1/2 -translate-x-1/2 w-24 h-24 bg-blue-500/20 rounded-full blur-2xl"></div>
-        )}
-        
-        {isFinal && (
-          <div className="absolute -top-20 left-1/2 -translate-x-1/2 w-48 h-48 bg-yellow-500/30 rounded-full blur-3xl animate-pulse"></div>
-        )}
+const RewardModal: React.FC<RewardModalProps> = ({ title, message, subMessage, buttonText, onAction, isFinal }) => {
+  const [visible, setVisible] = useState(false);
 
-        <h2 className={`text-4xl font-black italic mb-4 tracking-tighter ${
-          isFinal ? 'text-transparent bg-clip-text bg-gradient-to-b from-white to-[#D4AF37]' : 'text-white'
-        }`}>
+  useEffect(() => {
+    // Small delay triggers CSS transition for the zoom-in entrance
+    const t = setTimeout(() => setVisible(true), 20);
+    return () => clearTimeout(t);
+  }, []);
+
+  return (
+    <div
+      className="fixed inset-0 z-50 flex items-center justify-center p-4"
+      style={{ background: 'rgba(0,0,0,0.82)', backdropFilter: 'blur(6px)' }}
+    >
+      {/* Outer glow ring for final win */}
+      {isFinal && (
+        <div
+          className="absolute rounded-full animate-pulse"
+          style={{ width: 340, height: 340, background: 'radial-gradient(circle, rgba(234,179,8,0.22) 0%, transparent 70%)', pointerEvents: 'none' }}
+        />
+      )}
+
+      <div
+        className="relative w-full max-w-sm sm:max-w-md z-10 rounded-3xl p-6 sm:p-8 text-center"
+        style={{
+          background: 'linear-gradient(160deg, #1a1f45 0%, #0d1128 100%)',
+          border: `2px solid ${isFinal ? '#eab308' : '#4a5568'}`,
+          boxShadow: isFinal
+            ? '0 0 60px rgba(234,179,8,0.35), 0 0 120px rgba(234,179,8,0.12), inset 0 1px 0 rgba(255,255,255,0.08)'
+            : '0 0 40px rgba(0,0,0,0.6), inset 0 1px 0 rgba(255,255,255,0.05)',
+          transform: visible ? 'scale(1)' : 'scale(0.88)',
+          opacity: visible ? 1 : 0,
+          transition: 'transform 0.28s cubic-bezier(0.34,1.56,0.64,1), opacity 0.2s ease',
+        }}
+      >
+        {/* Emoji / icon accent above title */}
+        <div className="text-3xl sm:text-4xl mb-2 leading-none">
+          {isFinal ? '🏆' : '🎯'}
+        </div>
+
+        {/* Title */}
+        <h2
+          className={`text-2xl sm:text-3xl font-black italic mb-4 leading-tight ${isFinal
+              ? 'text-transparent bg-clip-text bg-gradient-to-b from-white via-[#fef08a] to-[#D4AF37]'
+              : 'text-white'
+            }`}
+        >
           {title}
         </h2>
 
-        <div className="bg-black/40 rounded-2xl p-6 mb-8 border border-white/5">
-          <p className="text-xl md:text-2xl font-bold leading-relaxed text-blue-50">
+        {/* Main message box */}
+        <div
+          className="rounded-2xl px-4 py-4 mb-3"
+          style={{
+            background: 'rgba(0,0,0,0.4)',
+            border: '1px solid rgba(255,255,255,0.07)',
+          }}
+        >
+          <p className="text-base sm:text-lg font-bold leading-snug text-blue-50">
             {message}
           </p>
         </div>
 
+        {/* Sub-message / prize teaser */}
+        {subMessage && (
+          <p className="text-xs sm:text-sm font-bold text-yellow-300/80 mb-4 tracking-wide">
+            {subMessage}
+          </p>
+        )}
+
+        {/* Action button – always gold for consistency */}
         <button
           onClick={onAction}
-          className={`w-full py-5 rounded-2xl text-2xl font-black tracking-widest transition-all duration-300 active:scale-95 shadow-xl ${
-            isFinal 
-            ? 'bg-gradient-to-b from-[#fef08a] via-[#eab308] to-[#ca8a04] text-[#0a0e27] hover:brightness-110'
-            : 'bg-white/10 hover:bg-white/20 text-white border border-white/20'
-          }`}
+          className="relative w-full py-4 sm:py-5 rounded-2xl font-black tracking-widest transition-all duration-200 active:scale-95 overflow-hidden btn-shine"
+          style={{
+            fontSize: isFinal ? '1.1rem' : '1rem',
+            background: 'linear-gradient(180deg, #fef08a 0%, #eab308 50%, #ca8a04 100%)',
+            color: '#0a0e27',
+            boxShadow: '0 5px 0 #854d0e, 0 0 30px rgba(234,179,8,0.4)',
+          }}
+          onMouseEnter={e => (e.currentTarget.style.filter = 'brightness(1.08)')}
+          onMouseLeave={e => (e.currentTarget.style.filter = 'brightness(1)')}
         >
           {buttonText}
         </button>
-        
+
+        {/* T&Cs */}
         {isFinal && (
-          <div className="mt-4 text-[10px] text-gray-400 uppercase tracking-widest opacity-60">
-            Terms & Conditions Apply
-          </div>
+          <p className="mt-3 text-[10px] text-gray-400 uppercase tracking-widest opacity-60">
+            Terms &amp; Conditions Apply
+          </p>
         )}
       </div>
     </div>

@@ -1,30 +1,105 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>3 Shot Drop</title>
+  <title>3 Shot Drop – Reveal Your Fortune | Win Up to $1,000!</title>
+
+  <!-- SEO -->
+  <meta name="description" content="Play 3 Shot Drop – drop 3 balls, reveal your prize, and claim your welcome bonus of up to $1,000! No purchase necessary.">
+
+  <!-- Open Graph / Social Sharing -->
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="3 Shot Drop – Reveal Your Fortune">
+  <meta property="og:description" content="Drop 3 shots, reveal your fortune and claim a 100% welcome bonus + reward credits. Play now!">
+  <meta property="og:image" content="/og-image.png">
+  <meta property="og:url" content="https://3shotdrop.com">
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="3 Shot Drop – Reveal Your Fortune">
+  <meta name="twitter:description" content="Drop 3 shots, reveal big prizes. Claim your bonus now!">
+  <meta name="twitter:image" content="/og-image.png">
+
+  <!-- Favicon -->
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎯</text></svg>">
+
   <script src="https://cdn.tailwindcss.com"></script>
-  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700;900&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,400;0,700;0,900;1,900&display=swap" rel="stylesheet">
+
   <style>
+    * { box-sizing: border-box; }
     body {
       font-family: 'Montserrat', sans-serif;
       margin: 0;
       overflow: hidden;
       background: #0a0e27;
     }
-    @keyframes float {
-      0% { transform: translateY(0px) rotate(0deg); opacity: 0.1; }
-      50% { transform: translateY(-20px) rotate(10deg); opacity: 0.3; }
-      100% { transform: translateY(0px) rotate(0deg); opacity: 0.1; }
+
+    /* Floating background orbs */
+    @keyframes floatA {
+      0%   { transform: translateY(0px) rotate(0deg);   opacity: 0.18; }
+      50%  { transform: translateY(-28px) rotate(12deg); opacity: 0.38; }
+      100% { transform: translateY(0px) rotate(0deg);   opacity: 0.18; }
     }
-    .coin-float {
+    @keyframes floatB {
+      0%   { transform: translateY(0px) rotate(0deg);   opacity: 0.12; }
+      50%  { transform: translateY(-18px) rotate(-8deg); opacity: 0.28; }
+      100% { transform: translateY(0px) rotate(0deg);   opacity: 0.12; }
+    }
+    @keyframes floatC {
+      0%   { transform: translateY(0px) scale(1);   opacity: 0.10; }
+      50%  { transform: translateY(-22px) scale(1.1); opacity: 0.25; }
+      100% { transform: translateY(0px) scale(1);   opacity: 0.10; }
+    }
+    .orb-a { position: absolute; animation: floatA 7s ease-in-out infinite; pointer-events: none; }
+    .orb-b { position: absolute; animation: floatB 9s ease-in-out infinite; pointer-events: none; }
+    .orb-c { position: absolute; animation: floatC 11s ease-in-out infinite; pointer-events: none; }
+
+    /* Button shine sweep */
+    @keyframes shineSweep {
+      0%   { left: -100%; }
+      60%  { left: 120%; }
+      100% { left: 120%; }
+    }
+    .btn-shine::after {
+      content: '';
       position: absolute;
-      animation: float 6s ease-in-out infinite;
-      pointer-events: none;
+      top: 0; left: -100%;
+      width: 60%; height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.35), transparent);
+      animation: shineSweep 2.4s ease-in-out infinite;
     }
+
+    /* Pulsing ring on active shot indicator */
+    @keyframes pulseRing {
+      0%   { box-shadow: 0 0 0 0 rgba(234,179,8,0.7); }
+      70%  { box-shadow: 0 0 0 10px rgba(234,179,8,0); }
+      100% { box-shadow: 0 0 0 0 rgba(234,179,8,0); }
+    }
+    .shot-active { animation: pulseRing 1.5s ease-out infinite; }
+
+    /* Confetti burst for modal */
+    @keyframes confettiFall {
+      0%   { transform: translateY(-20px) rotate(0deg); opacity: 1; }
+      100% { transform: translateY(100px) rotate(360deg); opacity: 0; }
+    }
+
+    /* Claim button urgent pulse */
+    @keyframes claimPulse {
+      0%, 100% { transform: scale(1);     box-shadow: 0 0 20px rgba(234,179,8,0.5); }
+      50%       { transform: scale(1.03);  box-shadow: 0 0 40px rgba(234,179,8,0.9); }
+    }
+    .claim-btn { animation: claimPulse 1.8s ease-in-out infinite; }
+
+    /* Stars sparkle */
+    @keyframes twinkle {
+      0%, 100% { opacity: 0.1; transform: scale(0.8); }
+      50%       { opacity: 0.6; transform: scale(1.2); }
+    }
+    .star { position: absolute; pointer-events: none; border-radius: 50%; background: #fef08a; }
   </style>
+
 <script type="importmap">
 {
   "imports": {
@@ -37,5 +112,6 @@
 </head>
 <body class="bg-[#0a0e27] text-white overflow-hidden">
   <div id="root"></div>
+  <script type="module" src="/index.tsx"></script>
 </body>
 </html>
